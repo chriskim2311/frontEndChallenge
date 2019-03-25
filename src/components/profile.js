@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Input from './input.js';
+import Dropdown from './dropdown.js';
 import './profile.css';
 
 function capitalizeFirstLetter(string) {
@@ -7,118 +9,107 @@ function capitalizeFirstLetter(string) {
 }
 
 class Profile extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
-    this.handleFormSubmit = this.handleFormSubmit.bind(this);
-    this.formMessageRef = React.createRef();
+    this.state = {
+      name: this.props.name || '',
+      phone:  this.props.phone ||'',
+      email:  this.props.email ||'',
+      gender:  this.props.gender ||'',
+      formSuccess: false,
+      emptyFields: [],
+      class: "profile-form__row hide"
+
+    }
   }
 
-  removeInvalidClasses(requiredFields) {
-    requiredFields.forEach((element) => {
-      element.classList.remove('profile-form__field--invalid');
-    });
+  removeInvalidClasses = () => {
 
-    this.formMessageRef.current.innerHTML = '';
-    this.formMessageRef.current.classList.remove('profile-form__message--invalid');
+    const emptyRedFields = document.querySelectorAll('.profile-form__field--invalid')
+    for (let i = 0; i < emptyRedFields.length; i++) {
+      emptyRedFields[i].classList.remove('profile-form__field--invalid')
+    }
+    this.setState({
+      formSuccess: false
+    })
   }
 
-  addInvalidClassesAndValidationMessage(emptyFields) {
-    const emptyFieldNames = emptyFields.map((element) => element.name);
-
-    this.formMessageRef.current.classList.add('profile-form__message--invalid');
-    this.formMessageRef.current.innerHTML = capitalizeFirstLetter(`${emptyFieldNames.join(', ')} can not be blank`);
-  }
-
-  showFormSuccess() {
-    this.formMessageRef.current.innerHTML = 'Form submitted!';
-  }
-
-  handleFormSubmit(event) {
+  handleFormSubmit = (event) => {
     event.preventDefault();
-
-    const requiredFields = [
-      event.target.name,
-      event.target.gender,
-      event.target.email,
-      event.target.phone
-    ];
-
-    const emptyFields = requiredFields.filter((element) => (
-      !Boolean(element.value)
-    ));
-
-    this.removeInvalidClasses(requiredFields);
+    const emptyFields = [];
+    console.log(this.state)
+    for (let field in this.state) {
+      if (this.state[field] === '') {
+        emptyFields.push(field)
+      }
+    }
+    console.log(emptyFields)
 
     if (emptyFields.length) {
-      this.addInvalidClassesAndValidationMessage(emptyFields);
-
-      emptyFields.forEach((element) => {
-        element.classList.add('profile-form__field--invalid');
-      });
-
+      this.removeInvalidClasses();
+      let index = 0
+      while (index < emptyFields.length - 1) {
+        let inputField = document.getElementById(emptyFields[index])
+        index++
+        inputField.classList.add('profile-form__field--invalid')
+      }
+      this.setState({
+        emptyFields: emptyFields,
+        class: "profile-form__row"
+      })
     } else {
-      this.showFormSuccess();
-
-      console.log({
-        name: event.target.name.value,
-        gender: event.target.gender.value,
-        email: event.target.email.value,
-        phone: event.target.phone.value
-      });
+      this.setState({
+        formSuccess: true,
+        class: "profile-form__row"
+      })
     }
-
   }
+
+  handleName = (e) => {
+    this.setState({
+      name: e.target.value
+    })
+  }
+
+  handleEmail = (e) => {
+    this.setState({
+      email: e.target.value
+    })
+  }
+
+  handlePhone = (e) => {
+    this.setState({
+      phone: e.target.value
+    })
+  }
+  handleGender = (e) => {
+    this.setState({
+      gender: e.target.value
+    })
+  }
+
 
   render() {
     return (
       <div className="app">
-        <h1>{this.props.name}</h1>
+        <h1>{this.props.title}</h1>
         <form onSubmit={this.handleFormSubmit}>
-          <label className="profile-form__row">
-            Name:
-            <input
-              defaultValue={this.props.profile.name}
-              className="profile-form__field" name="name" type="text"
-            />
-          </label>
-          <label className="profile-form__row">
-            Gender:
-            <select
-              defaultValue={this.props.profile.gender}
-              className="profile-form__field profile-form__select" name="gender"
-            >
-              <option value="unspecified">Unspecified</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </label>
-          <label className="profile-form__row">
-            Email:
-            <input
-              defaultValue={this.props.profile.email}
-              className="profile-form__field"
-              name="email"
-              type="text"
-            />
-          </label>
-          <label className="profile-form__row">
-            Phone:
-            <input
-              defaultValue={this.props.profile.phone}
-              className="profile-form__field"
-              name="phone"
-              type="text"
-            />
-          </label>
+          <Input className="profile-form__row" id="name" value={this.state.name} label="Name" type="text" onChange={this.handleName} />
+          <Dropdown label={"Gender"} id="gender" data={["Unspecified", "Male", "Female"]} type="text" onChange={this.handleGender} />
+          <Input className="profile-form__row" id="email" value={this.state.email} label="Email" type="text" onChange={this.handleEmail} />
+          <Input className="profile-form__row" id="phone" value={this.state.phone} label="Phone" type="number" onChange={this.handlePhone} />
           <div className="profile-form__row">
             <input type="submit" value="Save" />
           </div>
           <div className="profile-form__row">
-            <span
-              ref={this.formMessageRef}
-              className="profile-form__message"
-            />
+            {this.state.formSuccess ?
+              <span className={this.state.class}>Form Submitted!</span>
+              :
+              <span value="Invalid form"
+                className={this.state.class}>Invalid Form! {capitalizeFirstLetter(`${this.state.emptyFields.join(', ')} can not be blank`)}
+              </span>
+            }
           </div>
         </form>
       </div>
