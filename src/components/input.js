@@ -9,15 +9,27 @@ class Input extends Component {
         this.state= {
             value: '',
             label: '',
-            type: ''
+            type: '',
+            emptyFields: [],
+            emptyInput: false
         }
     }
+    componentDidUpdate(previousProps, previousState){
+        console.log(this.props.emptyInput)
+        if(previousProps.emptyInput !== this.props.emptyInput){
+            this.setState({
+                emptyInput: this.props.emptyInput
+            })
+        }
+    }
+
 
     componentDidMount() {
         this.setState({
             value: this.props.value,
             label: this.props.label,
-            type: this.props.type
+            type: this.props.type,
+            
         })
     }
 
@@ -28,11 +40,11 @@ class Input extends Component {
                 <label>
                      {this.state.label + ":"}
                      <input
-                     defaultValue= {this.state.value}
                      id= {this.props.id}
-                     className= "profile-form__row"
+                     className=  {this.state.emptyInput ?  'profile-form__row profile-form__field--invalid' : "profile-form__row"}
                      type={this.state.type}
-                     onKeyUp= {this.props.onChange}
+                     value={this.props.value}
+                     onChange= {this.props.onChange}
                      />
                 </label>
             </div>
