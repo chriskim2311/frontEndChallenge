@@ -28,12 +28,12 @@ class Profile extends Component {
     }
   }
 
-  removeInvalidClasses = () => {
-    const emptyRedFields = document.querySelectorAll('.profile-form__field--invalid')
-    for (let i = 0; i < emptyRedFields.length; i++) {
-      emptyRedFields[i].classList.remove('profile-form__field--invalid')
-    }
-  }
+  // removeInvalidClasses = () => {
+  //   const emptyRedFields = document.querySelectorAll('.profile-form__field--invalid')
+  //   for (let i = 0; i < emptyRedFields.length; i++) {
+  //     emptyRedFields[i].classList.remove('profile-form__field--invalid')
+  //   }
+  // }
 
   handleFormSubmit = (event) => {
     event.preventDefault();
@@ -43,7 +43,6 @@ class Profile extends Component {
         emptyFields.push(field)
       }
     }
-    // console.log(emptyFields)
     if (emptyFields.length) {
       let stateObj = {
         formSuccess: false,
@@ -54,18 +53,10 @@ class Profile extends Component {
         emptyphone: false
       }
 
-      for(let i = 0; i < emptyFields.length; i++) {
-        stateObj['empty'+emptyFields[i]] = true
+      for (let i = 0; i < emptyFields.length; i++) {
+        stateObj['empty' + emptyFields[i]] = true
       }
-      console.log(stateObj)
-     
-    //   this.removeInvalidClasses();
-    //   let index = 0
-    //   while (index < emptyFields.length - 1) {
-    //     let inputField = document.getElementById(emptyFields[index])
-    //     index++
-    //     inputField.classList.add('profile-form__field--invalid')
-    //   }
+
       this.setState(stateObj)
     } else {
       this.setState({
@@ -75,36 +66,18 @@ class Profile extends Component {
         phone: '',
         email: '',
         gender: '',
-      emptyprofileName: false,
-      emptyemail: false,
-      emptyphone: false,
+        emptyprofileName: false,
+        emptyemail: false,
+        emptyphone: false,
       })
     }
   }
 
-  handleName = (e) => {
-    
+  handleInputChange = (name, e) => {
     this.setState({
-      profileName: e.target.value
+      [name]: e.target.value
     })
-    console.log(this.state.profileName)
-  }
 
-  handleEmail = (e) => {
-    this.setState({
-      email: e.target.value
-    })
-  }
-
-  handlePhone = (e) => {
-    this.setState({
-      phone: e.target.value
-    })
-  }
-  handleGender = (e) => {
-    this.setState({
-      gender: e.target.value
-    })
   }
 
   render() {
@@ -112,10 +85,10 @@ class Profile extends Component {
       <div className="app">
         <h1>{this.props.name}</h1>
         <form onSubmit={this.handleFormSubmit}>
-          <Input  id="profileName" value={this.state.profileName} label="Name" type="text" emptyInput={this.state.emptyprofileName} onChange={this.handleName} />
-          <Dropdown label={"Gender"} id="gender" data={["Unspecified", "Male", "Female"]} type="text" onChange={this.handleGender} />
-          <Input  id="email" value={this.state.email} label="Email" type="text" emptyInput={this.state.emptyemail} onChange={this.handleEmail} />
-          <Input  id="phone" value={this.state.phone} label="Phone" type="number" emptyInput={this.state.emptyphone} onChange={this.handlePhone} />
+          <Input name="profileName" value={this.state.profileName} label="Name" type="text" emptyInput={this.state.emptyprofileName} onChange={(e) => this.handleInputChange("profileName", e)} />
+          <Dropdown label={"Gender"} name="gender" data={["Unspecified", "Male", "Female"]} type="text" onChange={(e) => this.handleInputChange("gender", e)} />
+          <Input name="email" value={this.state.email} label="Email" type="text" emptyInput={this.state.emptyemail} onChange={(e) => this.handleInputChange("email", e)} />
+          <Input name="phone" value={this.state.phone} label="Phone" type="number" emptyInput={this.state.emptyphone} onChange={(e) => this.handleInputChange("phone", e)} />
           <div className="profile-form__row">
             <input type="submit" value="Save" />
           </div>
