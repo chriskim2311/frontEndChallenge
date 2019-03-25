@@ -5,8 +5,6 @@ import './profile.css'
 class Dropdown extends Component {
     constructor(props) {
         super(props)
-
-
         this.state = {
             data: this.props.data,
             defaultValue: this.props.defaultValue,

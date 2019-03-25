@@ -14,9 +14,9 @@ class Profile extends Component {
 
     this.state = {
       name: this.props.name || '',
-      phone:  this.props.phone ||'',
-      email:  this.props.email ||'',
-      gender:  this.props.gender ||'',
+      phone: this.props.phone || '',
+      email: this.props.email || '',
+      gender: this.props.gender || '',
       formSuccess: false,
       emptyFields: [],
       class: "profile-form__row hide"
@@ -25,14 +25,13 @@ class Profile extends Component {
   }
 
   removeInvalidClasses = () => {
-
     const emptyRedFields = document.querySelectorAll('.profile-form__field--invalid')
     for (let i = 0; i < emptyRedFields.length; i++) {
       emptyRedFields[i].classList.remove('profile-form__field--invalid')
     }
-    this.setState({
-      formSuccess: false
-    })
+    // this.setState({
+    //   formSuccess: false
+    // })
   }
 
   handleFormSubmit = (event) => {
@@ -88,7 +87,6 @@ class Profile extends Component {
       gender: e.target.value
     })
   }
-
 
   render() {
     return (
