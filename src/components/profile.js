@@ -38,13 +38,6 @@ class Profile extends Component {
         formSuccess: false,
         emptyFields: emptyFields,
         class: "profile-form__row",
-        emptyprofileName: false,
-        emptyemail: false,
-        emptyphone: false
-      }
-
-      for (let i = 0; i < emptyFields.length; i++) {
-        stateObj['empty' + emptyFields[i]] = true
       }
 
       this.setState(stateObj)
